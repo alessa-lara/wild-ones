@@ -53,3 +53,14 @@ class Creature():
             offspring.append(creature)
 
         return offspring
+
+    def advance_age(self):
+        new_age = self.age.advance_age()
+
+        if new_age is None:
+            return
+
+        self.age = new_age
+
+        self.hunger_rate *= new_age.resource_comsumption
+        self.thirst_rate *= new_age.resource_comsumption
