@@ -11,8 +11,7 @@ class StateAge(ABC):
 
 class StateYoung(StateAge):
     def __init__(self) -> None:
-        resource_comsumption: int = 1
-     
+        self.resource_comsumption: int = 1
 
     @override
     def advance_age(self) -> StateMature:
@@ -20,7 +19,7 @@ class StateYoung(StateAge):
 
 class StateMature(StateAge):
     def __init__(self) -> None:
-        resource_comsumption: int = 2
+        self.resource_comsumption: int = 2
 
     @override
     def advance_age(self) -> StateDead:
@@ -28,7 +27,7 @@ class StateMature(StateAge):
 
 class StateDead(StateAge):
     def __init__(self) -> None:
-        resource_comsumption: int = 0
+        self.resource_comsumption: int = 0
 
     @override
     def advance_age(self) -> None:
