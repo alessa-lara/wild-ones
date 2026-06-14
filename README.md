@@ -53,13 +53,30 @@ classDiagram
         +Set[Resources] canEat
     }
 
+    class Resource {
+	+str name
+	+int quantity
+	+int moisture
+	+int nutrition
+    }
+
     FeedingBehaviour <|-- Carnivore
     FeedingBehaviour <|-- Omnivore
     FeedingBehaviour <|-- Herbivore
+
+    Resource <|-- Plant
+    Resource <|-- Meat
+    Resource <|-- Water
+
+    Creature --> FeedingBehaviour
+    Creature --> AgeState
+    Creature --> Area
+
+    Area --> Resource
 ```
 
 Foram utilizados os seguintes padrões de projeto:
 - State: Separamos a lógica da idade de uma criatura, fazendo com que dependendo do estado de vida dela (jovem, adulto, morto),
   suas necessidades de água e comida sejam afetados.
-- Dependency Injection: Ao invés da propria classe criar suas dependências, deixamos isto como um requisito para a
-  inicialização.
+- Factory: Instanciamos diferentes criaturas com uma Factory especializada, que também mostra as criaturas disponíveis.
+- TODO: Flyweight
