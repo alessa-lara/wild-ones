@@ -2,31 +2,31 @@ from .resource import Water, Plant
 from .creature import Creature
 
 class Area:
-    kmQuadrado: float
-    populacaoMaxima: int
+    squareKm: float
+    maxPopulation: int
 
-    agua: Water
-    plantas: list[Plant]
-    criaturas: list[Creature]
+    water: Water
+    plants: list[Plant]
+    creatures: list[Creature]
 
     # clima: Weather
     # estacao: Season
 
     def __init__(self, kmQuadrado, populacao, agua, plantas, criaturas):
-        self.kmQuadrado: float = kmQuadrado
-        self.populacaoMaxima: int = populacao
-        self.agua: Water = agua
+        self.squareKm: float = kmQuadrado
+        self.maxPopulation: int = populacao
+        self.water: Water = agua
         self.plants: list[Plant] = plantas
-        self.criaturas: list[Creature] = criaturas
+        self.creatures: list[Creature] = criaturas
 
     def is_full(self) -> bool:
-        if len(self.criaturas) >= self.populacaoMaxima:
+        if len(self.creatures) >= self.maxPopulation:
             return True
 
         return False
 
     def available_space(self) -> int:
-        return self.populacaoMaxima - len(self.criaturas)
+        return self.maxPopulation - len(self.creatures)
 
     def remove_creature(self, creature: Creature):
-        self.criaturas.remove(creature)
+        self.creatures.remove(creature)
