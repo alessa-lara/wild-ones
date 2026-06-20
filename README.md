@@ -8,18 +8,28 @@ acurada.
 
 ```mermaid
 classDiagram
+    class Species {
+        +int id
+        +str name
+        +int thirst_rate
+        +int hunger_rate
+        +FeedingBehaviour diet
+        +Area area
+        +int max_offspring
+        +Meat meat
+    }
+
     class Creature {
-	+int sede
-	+int fome
-        +float reproducao
-        +FeedingBehaviour dieta
+        +int id
+	+int thirst
+	+int hunger
 	+AgeState idade
 
         -reproduzir()
     }
 
     class AgeState {
-	+Creature creature
+        +int resource_comsumption
 
 	-advance_age()
     }
@@ -36,17 +46,6 @@ classDiagram
         +Set[Plant] recursosPlantas
         +Set[Creature] recursosAnimais
 
-        +arr[Weather] climas
-	+Season estacao
-    }
-
-    class Weather {
-        +tuple(float, float) temperaturaFaixa
-        +float umidade
-        +float precipitacao
-
-        -variar()
-        -mudancaClima()
     }
 
     class FeedingBehaviour {
@@ -68,15 +67,16 @@ classDiagram
     Resource <|-- Meat
     Resource <|-- Water
 
-    Creature --> FeedingBehaviour
+    Species --> Area
+    Species --> FeedingBehaviour
+    Species --> Meat
+
     Creature --> AgeState
-    Creature --> Area
 
     Area --> Resource
 ```
 
 Foram utilizados os seguintes padrões de projeto:
-- State: Separamos a lógica da idade de uma criatura, fazendo com que dependendo do estado de vida dela (jovem, adulto, morto),
-  suas necessidades de água e comida sejam afetados.
-- Factory: Instanciamos diferentes criaturas com uma Factory especializada, que também mostra as criaturas disponíveis.
-- TODO: Flyweight
+- State: Separamos a lógica da idade de uma criatura, fazendo com que dependendo do estado de vida dela (jovem, adulto, morto), suas necessidades de água e comida sejam afetados.
+- Factory: Instanciamos diferentes criaturas, recursos e a propria area com uma Factory especializada.
+- Flyweight: Utilizamos o padrao flyweight para agregar atributos que não são modificados em criaturas (creature_name, feeding_behaviour, area, thirst_rate, hunger_rate, max_offspring)
