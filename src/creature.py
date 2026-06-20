@@ -6,6 +6,7 @@ from .area import Area
 from .resource import Resource, Water
 from .state_ages import StateAge, StateDead, StateYoung
 from .feeding_behaviour import FeedingBehaviour
+from .factory import Factory_Area
 
 class Species():
     def __init__(self, name: str, thirst_rate: int, hunger_rate: int, feeding_behaviour: FeedingBehaviour, area: Area, max_offspring: int):
@@ -16,6 +17,7 @@ class Species():
         self.__area = area
         self.__max_offspring = max_offspring
         self.__id_count = 0
+        self.meat = Factory_Area().meat(self.species_name, 1, 0.5, 2) # dunno what to do, keep this while i think
 
     @property
     def species_name(self):
