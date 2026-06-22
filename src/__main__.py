@@ -1,8 +1,7 @@
 from types import MethodType
 
-from .factory import Factory_Area
-from .factory import FactoryCreature
-from .factory import FactorySpecies
+from .factory_area_resources import Factory_Area
+from .factory_species_creatures import FactoryCreature, FactorySpecies
 
 from .state_ages import StateMature
 
@@ -17,10 +16,8 @@ def main():
     creatures = []
     area = fact_area.area(100, plants, creatures)
 
-    area_populate(fact_area, fact_spec, fact_creat, area)
-
     inp: int = 0
-    while (inp != 1 and inp != 2):
+    while (inp != 2):
         area_populate(fact_area, fact_spec, fact_creat, area)
 
         print("You wish to create another species?")
@@ -28,23 +25,31 @@ def main():
         print("[2] No")
         inp = int( input() )
 
-        clear_screen()
-
+    days = 0
     while True:
+        print(f"day {days}: there are {len(area.creatures)} creatures in the area.")
+        print("area resources:")
+        print(f"- water: {area.water.quantity}")
+
+        for plant in area.plants:
+            print(f"{plant.name}: {plant.quantity}")
+
         game(area)
-        len(area.creatures)
+        days += 1
+        input("Press any character to advance the day")
+        clear_screen()
 
 def game(area: Area):
     for creature in area.creatures:
         if creature.hunger > 1:
-            creature.consume()
+            creature.eat()
         else:
-            creature.hunger += creature.hunger_rate
+            creature.hunger += creature.species.hunger_rate
 
         if creature.thirst > 1:
-            creature.consume()
+            creature.drink()
         else:
-            creature.thirst += creature.thirst_rate
+            creature.thirst += creature.species.thirst_rate
 
         if not isinstance(creature.age, StateMature):
             continue
@@ -72,7 +77,6 @@ def area_populate(fact_area, fact_spec, fact_creat, area):
     while (inp <= 0):
         print(f"How many creatures of the type {species.name} you want to create? ")
         inp = int( input() )
-        clear_screen()
 
     for _ in range(0, inp):
         creature = fact_creat.creature(species)

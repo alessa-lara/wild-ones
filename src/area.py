@@ -9,9 +9,6 @@ class Area:
     plants: list[Plant]
     creatures: list[Creature]
 
-    # clima: Weather
-    # estacao: Season
-
     def __init__(self, kmQuadrado, populacao, agua, plantas, criaturas):
         self.squareKm: float = kmQuadrado
         self.maxPopulation: int = populacao

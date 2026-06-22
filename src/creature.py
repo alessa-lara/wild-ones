@@ -1,27 +1,27 @@
 from __future__ import annotations
-from collections.abc import Set
 import random
 
-from .area import Area
-from .resource import Resource, Water
-from .state_ages import StateAge, StateDead, StateYoung
-from .feeding_behaviour import FeedingBehaviour
-from .factory import Factory_Area
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .area import Area
+    from .resource import Meat
+    from .state_ages import StateAge, StateDead, StateYoung
+    from .feeding_behaviour import FeedingBehaviour
 
 class Species():
-    def __init__(self, name: str, thirst_rate: int, hunger_rate: int, feeding_behaviour: FeedingBehaviour, area: Area, max_offspring: int):
-        self.__species_name: str = name
+    def __init__(self, name: str, thirst_rate: int, hunger_rate: int, feeding_behaviour: FeedingBehaviour, area: Area, max_offspring: int, species_meat: Meat):
+        self.__name: str = name
         self.__thirst_rate: int = thirst_rate
         self.__hunger_rate: int = hunger_rate
         self.__feeding_behaviour = feeding_behaviour
         self.__area = area
         self.__max_offspring = max_offspring
         self.__id_count = 0
-        self.meat = Factory_Area().meat(self.species_name, 1, 0.5, 2) # dunno what to do, keep this while i think
+        self.meat = species_meat # dunno what to do, keep this while i think
 
     @property
-    def species_name(self):
-        return self.__species_name
+    def name(self):
+        return self.__name
 
     @property
     def thirst_rate(self):
@@ -46,7 +46,7 @@ class Species():
     @property
     def id_count(self):
         self.__id_count += 1
-        return self.id_count
+        return self.__id_count
 
 class Creature():
     species: Species
@@ -64,14 +64,55 @@ class Creature():
         self.thirst = 0
         self.hunger = 0
 
-    def consume(self, resource: Resource, quantity: int):
-        is_water: bool = isinstance(resource, Water)
-        can_eat: Set[Resource] = self.species.feeding_behaviour.canEat
+    def eat(self):
+        food = self.species.feeding_behaviour.find_food(self.species.area)
 
-        if resource not in can_eat and not is_water:
-            raise ValueError(f"{self} não aceita {resource} em sua dieta")
+        if food is None:
+            return
 
-        resource.consume(self, quantity)
+        nutrition: int = 0
+        moisture: int = 0
+        quantity: int = 1
+
+        request: int = 0
+
+        if isinstance(food, Creature):
+            nutrition = food.species.meat.nutrition
+            moisture = food.species.meat.moisture
+
+            request = 1
+            request = food.species.meat.request(request)
+
+            food.die()
+        else:
+            nutrition = food.nutrition
+            moisture = food.moisture
+
+            request = self.hunger // food.nutrition
+            quantity = food.request(request)
+
+        while quantity > 0:
+            self.hunger -= nutrition
+            self.thirst -= moisture
+            quantity -= 1
+
+            if self.hunger < 0: # a criatura esta satisfeita
+                self.hunger = 0
+                break
+
+            if self.thirst < 0:
+                self.thirst = 0
+
+    def drink(self):
+        request = self.thirst
+        water = self.species.area.water
+        n = water.request(request)
+
+        for _ in range(0, n):
+            self.thirst -= water.moisture
+
+        if self.thirst < 0:
+            self.thirst = 0
 
     def multiply(self) -> list[Creature] | None:
         if self.species.area.is_full():
@@ -104,3 +145,6 @@ class Creature():
 
         self.hunger_rate *= new_age.resource_comsumption
         self.thirst_rate *= new_age.resource_comsumption
+
+    def die(self):
+        self.species.area.remove_creature(self)
