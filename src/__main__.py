@@ -54,12 +54,12 @@ def game(area: Area, days: int):
         if creature.hunger > 1:
             creature.eat()
         else:
-            creature.hunger += creature.species.hunger_rate
+            creature.hunger += creature.species.hunger_rate * creature.comsumption_modifier
 
         if creature.thirst > 1:
             creature.drink()
         else:
-            creature.thirst += creature.species.thirst_rate
+            creature.thirst += creature.species.thirst_rate * creature.comsumption_modifier
 
         if creature.thirst > 10 or creature.hunger > 10:
             creature.die
