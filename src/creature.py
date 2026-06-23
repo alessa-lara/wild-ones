@@ -1,11 +1,12 @@
 from __future__ import annotations
 import random
 
+from .state_ages import StateAge, StateDead, StateYoung
+
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .area import Area
     from .resource import Meat
-    from .state_ages import StateAge, StateDead, StateYoung
     from .feeding_behaviour import FeedingBehaviour
 
 class Species():
@@ -17,6 +18,7 @@ class Species():
         self.__area = area
         self.__max_offspring = max_offspring
         self.__id_count = 0
+        self.creature_counter = 0
         self.meat = species_meat # dunno what to do, keep this while i think
 
     @property
@@ -51,8 +53,8 @@ class Species():
 class Creature():
     species: Species
 
-    thirst: int # maybe bool?
-    hunger: int # maybe bool?
+    thirst: float # maybe bool?
+    hunger: float # maybe bool?
 
     age: StateAge
 
@@ -104,7 +106,7 @@ class Creature():
                 self.thirst = 0
 
     def drink(self):
-        request = self.thirst
+        request = int(self.thirst)
         water = self.species.area.water
         n = water.request(request)
 
@@ -129,6 +131,8 @@ class Creature():
 
             offspring.append(creature)
 
+        self.species.creature_counter += n
+
         return offspring
 
     def advance_age(self):
@@ -137,14 +141,16 @@ class Creature():
         if new_age is None:
             return
 
-        if new_age is StateDead:
+        if isinstance(new_age, StateDead):
             self.species.area.remove_creature(self)
+            self.species.creature_counter -= 1
             return
 
         self.age = new_age
 
-        self.hunger_rate *= new_age.resource_comsumption
-        self.thirst_rate *= new_age.resource_comsumption
+        # self.hunger_rate *= new_age.resource_comsumption # cant do this anymore
+        # self.thirst_rate *= new_age.resource_comsumption # cant do this anymore
 
     def die(self):
         self.species.area.remove_creature(self)
+        self.species.creature_counter -= 1

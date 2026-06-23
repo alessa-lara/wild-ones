@@ -13,6 +13,7 @@ class FactoryCreature():
 
     def creature(self, species: Species):
         creature = Creature(species, self.__state_young)
+        species.creature_counter += 1
         return creature
 
 class FactorySpecies():
@@ -40,7 +41,7 @@ class FactorySpecies():
         thirst_rate = 1
         hunger_rate = 1
 
-        grass = factory_resource.grass
+        grass = factory_resource.grass(1)
         plants: AbstractSet = { grass }
         area.plants.append(grass)
 
