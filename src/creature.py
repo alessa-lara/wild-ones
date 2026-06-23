@@ -53,8 +53,10 @@ class Species():
 class Creature():
     species: Species
 
-    thirst: float # maybe bool?
-    hunger: float # maybe bool?
+    thirst: float
+    hunger: float
+
+    comsumption_modifier: int
 
     age: StateAge
 
@@ -65,6 +67,8 @@ class Creature():
 
         self.thirst = 0
         self.hunger = 0
+
+        self.comsumption_modifier = 1
 
     def eat(self):
         food = self.species.feeding_behaviour.find_food(self.species.area)
@@ -90,7 +94,7 @@ class Creature():
             nutrition = food.nutrition
             moisture = food.moisture
 
-            request = self.hunger // food.nutrition
+            request = int(self.hunger // food.nutrition)
             quantity = food.request(request)
 
         while quantity > 0:
@@ -148,8 +152,8 @@ class Creature():
 
         self.age = new_age
 
-        # self.hunger_rate *= new_age.resource_comsumption # cant do this anymore
-        # self.thirst_rate *= new_age.resource_comsumption # cant do this anymore
+        self.comsumption_modifier *= new_age.resource_comsumption
+        self.comsumption_modifier *= new_age.resource_comsumption
 
     def die(self):
         self.species.area.remove_creature(self)
