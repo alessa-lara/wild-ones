@@ -1,6 +1,6 @@
 from types import MethodType
 
-from .factory_area_resources import Factory_Area, factory_resource
+from .factory_area_resources import Factory_Area, Factory_Resource
 from .factory_species_creatures import FactoryCreature, FactorySpecies
 
 from .state_ages import StateMature
@@ -9,7 +9,7 @@ from .area import Area
 
 def main():
     fact_area = Factory_Area()
-    fact_resource = factory_resource()
+    fact_resource = Factory_Resource()
     fact_spec = FactorySpecies()
     fact_creat = FactoryCreature()
 

@@ -5,7 +5,7 @@ from .creature import Creature, Species
 from .area import Area
 from .state_ages import StateYoung
 from .feeding_behaviour import Carnivore, Herbivore
-from .factory_area_resources import factory_resource
+from .factory_area_resources import Factory_Resource
 
 class FactoryCreature():
     def __init__(self) -> None:
@@ -20,7 +20,7 @@ class FactorySpecies():
     def __init__(self):
         self.available = { "sheep": self.sheep, "wolf": self.wolf }
 
-    def wolf(self, area: Area, factory_resource: factory_resource) -> Species:
+    def wolf(self, area: Area, factory_resource: Factory_Resource) -> Species:
         name = "wolf"
         thirst_rate = 1
         hunger_rate = 1

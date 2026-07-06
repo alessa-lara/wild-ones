@@ -2,7 +2,7 @@ from .resource import Resource, Meat, Plant, Water
 from .area import Area
 from .creature import Creature
 
-class factory_resource():
+class Factory_Resource():
     def __init__(self):
         self.__registry: dict[str, Resource] = {}
 
